@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Enhanced viewport meta tag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <!-- Prevent iOS telephone number detection -->
+  <meta name="format-detection" content="telephone=no">
+  <title>Mayfair Bites</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+    }
+
+    /* Navigation Bar Styles - Pastry Theme */
+    .navbar {
+      background-color: #fff9f0;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #e8b878;
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .logo:hover {
+      color: #d4a062;
+      transform: scale(1.02);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #6d4c3d;
+      font-weight: 600;
+      font-size: 1.1rem;
+      position: relative;
+      padding: 0.5rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #e8b878;
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #c97e4a;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      font-size: 1.8rem;
+      color: #6d4c3d;
+      padding: 0.5rem;
+      background: none;
+      border: none;
+    }
+
+    /* Delicious Creations Slideshow */
+    .section-title {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      color: #6d4c3d;
+      font-size: 2.5rem;
+      margin: 2rem 0;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 100px;
+      height: 3px;
+      background: #e8b878;
+      margin: 0.5rem auto;
+    }
+
+    .slideshow-container {
+      max-width: 1200px;
+      position: relative;
+      margin: 2rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(110, 76, 61, 0.2);
+    }
+
+    .slide {
+      display: none;
+      transition: opacity 1s ease;
+      position: relative;
+    }
+
+    .slide.fade {
+      animation: fade 2s ease-in-out;
+    }
+
+    @keyframes fade {
+      from {opacity: 0.4}
+      to {opacity: 1}
+    }
+
+    .slide img {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.5s ease;
+    }
+
+    .slide:hover img {
+      transform: scale(1.02);
+    }
+
+    .slide video {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    /* Slide caption */
+    .slide::after {
+      content: attr(alt);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(109, 76, 61, 0.8);
+      color: #fff9f0;
+      padding: 1rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      text-align: center;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* Navigation arrows - made larger for touch */
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: 50px;
+      height: 50px;
+      padding: 16px;
+      margin-top: -25px;
+      color: #fff9f0;
+      font-weight: bold;
+      font-size: 2rem;
+      transition: 0.6s ease;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+      background-color: rgba(109, 76, 61, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+
+    .prev:hover, .next:hover {
+      background-color: rgba(109, 76, 61, 0.9);
+    }
+
+    /* Dots/bullets/indicators - larger for touch */
+    .dot-container {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .dot {
+      cursor: pointer;
+      height: 18px;
+      width: 18px;
+      margin: 0 8px;
+      background-color: #e8d5b8;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.6s ease;
+    }
+
+    .active, .dot:hover {
+      background-color: #e8b878;
+    }
+
+    /* Content Sections */
+    .content-section {
+      padding: 2rem 5%;
+      text-align: center;
+      background-color: #fff9f0;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    .content-section h2 {
+      font-family: 'Playfair Display', serif;
+      color: #6d4c3d;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .content-section p {
+      font-family: 'Poppins', sans-serif;
+      color: #6d4c3d;
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Menu Section */
+    .menu-section {
+      padding: 2rem 5%;
+      background-color: #f8f1e6;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    .menu-category {
+      margin-bottom: 1.5rem;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 1rem 0;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed #d4a062;
+    }
+
+    .menu-item-name {
+      font-weight: 600;
+      color: #6d4c3d;
+      font-size: 1rem;
+    }
+
+    .menu-item-price {
+      color: #c97e4a;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* About Section */
+    .about-section {
+      padding: 2rem 5%;
+      background-color: #f5ede0;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    .about-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .about-text {
+      flex: 1;
+    }
+
+    .about-image {
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      padding: 2rem 5%;
+      background-color: #f0e6d6;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    .contact-info {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 1.5rem auto;
+    }
+
+    .contact-card {
+      background: white;
+      padding: 1.2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .contact-card h3 {
+      color: #6d4c3d;
+      margin-bottom: 1rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+    }
+
+    .contact-card p {
+      margin: 0.5rem 0;
+      font-size: 0.95rem;
+    }
+
+    .contact-icon {
+      color: #d4a062;
+      margin-right: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    .footer {
+      background-color: #6d4c3d;
+      color: #fff9f0;
+      padding: 1.5rem 5%;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .footer-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .social-icons {
+      margin: 1rem 0;
+    }
+
+    .social-icons a {
+      color: #fff9f0;
+      font-size: 1.5rem;
+      margin: 0 0.8rem;
+      transition: color 0.3s ease;
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+
+    .social-icons a:hover {
+      color: #e8b878;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      .slide img, .slide video {
+        max-height: 500px;
+      }
+      
+      .prev, .next {
+        width: 40px;
+        height: 40px;
+        padding: 12px;
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0.8rem 5%;
+        flex-wrap: wrap;
+      }
+      
+      .menu-toggle {
+        display: block;
+        order: 1;
+      }
+      
+      .logo {
+        order: 2;
+        font-size: 1.6rem;
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0;
+      }
+      
+      .nav-links {
+        display: none;
+        width: 100%;
+        order: 3;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem 0;
+        border-top: 1px solid #f0e6d6;
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+      
+      .nav-links a {
+        padding: 0.8rem 1rem;
+        border-radius: 4px;
+        color: #8c5e3b;
+        font-size: 1rem;
+      }
+      
+      .nav-links a:hover {
+        background-color: #f8ece0;
+        color: #c97e4a;
+      }
+      
+      .nav-links a::after {
+        display: none;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        margin: 1.5rem 0;
+      }
+      
+      .slide img, .slide video {
+        max-height: 350px;
+      }
+      
+      .slide::after {
+        font-size: 1rem;
+        padding: 0.8rem;
+      }
+      
+      .prev, .next {
+        width: 35px;
+        height: 35px;
+        padding: 10px;
+        font-size: 1.3rem;
+      }
+      
+      .dot {
+        height: 14px;
+        width: 14px;
+      }
+
+      .about-content {
+        flex-direction: column;
+      }
+      
+      .content-section, 
+      .menu-section, 
+      .about-section, 
+      .contact-section {
+        padding: 1.5rem 5%;
+        margin: 1rem 0;
+      }
+      
+      .content-section h2,
+      .menu-category h3 {
+        font-size: 1.5rem;
+      }
+      
+      .content-section p {
+        font-size: 1rem;
+      }
+      
+      .contact-card {
+        min-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .slide img, .slide video {
+        max-height: 250px;
+      }
+      
+      .section-title {
+        font-size: 1.6rem;
+      }
+      
+      .content-section h2 {
+        font-size: 1.3rem;
+      }
+      
+      .menu-item-name,
+      .menu-item-price {
+        font-size: 0.9rem;
+      }
+      
+      .contact-card h3 {
+        font-size: 1.1rem;
+      }
+      
+      .contact-card p {
+        font-size: 0.85rem;
+      }
+      
+      .footer-content h3 {
+        font-size: 1.3rem;
+      }
+      
+      .social-icons a {
+        font-size: 1.3rem;
+        margin: 0 0.5rem;
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+      }
+      
+      /* Larger touch targets for mobile */
+      .nav-links a {
+        padding: 1rem;
+      }
+      
+      .menu-toggle {
+        padding: 0.8rem;
+      }
+      
+      .dot {
+        height: 16px;
+        width: 16px;
+        margin: 0 6px;
+      }
+    }
+
+    /* iOS specific fixes */
+    @supports (-webkit-touch-callout: none) {
+      /* Fix for Safari viewport height issue */
+      .slideshow-container, 
+      .slide img, 
+      .slide video {
+        max-height: 50vh;
+      }
+      
+      /* Prevent zoom on input */
+      input, select, textarea {
+        font-size: 16px;
+      }
+    }
+
+    /* Android specific fixes */
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      /* Fix for Chrome on Android */
+      .slide img, .slide video {
+        max-height: 45vh;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Section spacing */
+    section {
+      scroll-margin-top: 80px;
+    }
+    
+    /* Prevent layout shifts */
+    img, video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    
+    /* Better button styling for mobile */
+    button, .menu-toggle {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: none;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <button class="menu-toggle" aria-label="Toggle menu">
+      <i class="fas fa-bars"></i>
+    </button>
+    <a href="#" class="logo">Mayfair Bites</a>
+    <div class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Home Section -->
+    <section id="home">
+      <!-- Slideshow Section -->
+      <section class="slideshow-section">
+        <h2 class="section-title">Our Delicious Creations</h2>
+        <div class="slideshow-container">
+          <!-- Slides -->
+          <div class="slide fade">
+            <img src="../mayfairbites/IMG-20250608-WA0130.jpg" alt="Delicious croissants">
+          </div>
+          
+          <div class="slide fade">
+            <img src="../mayfairbites/IMG-20250608-WA0139.jpg" alt="Mayfair Bites pastry">
+          </div>
+          
+          <div class="slide fade">
+            <img src="../mayfairbites/w5.jpg" alt="Mayfair Bites bakery">
+          </div>
+          
+          <div class="slide fade">
+            <img src="../mayfairbites/IMG-20250608-WA0144.jpg" alt="Mayfair Bites dessert">
+          </div>
+          
+          <div class="slide fade">
+            <video src="../mayfairbites/whatsapp video.mp4" controls autoplay muted loop playsinline></video>
+          </div>
+          
+          <!-- Navigation buttons -->
+          <a class="prev" onclick="plusSlides(-1)" aria-label="Previous slide">❮</a>
+          <a class="next" onclick="plusSlides(1)" aria-label="Next slide">❯</a>
+        </div>
+
+        <!-- Dot indicators -->
+        <div class="dot-container">
+          <span class="dot" onclick="currentSlide(1)" aria-label="Slide 1"></span> 
+          <span class="dot" onclick="currentSlide(2)" aria-label="Slide 2"></span> 
+          <span class="dot" onclick="currentSlide(3)" aria-label="Slide 3"></span> 
+          <span class="dot" onclick="currentSlide(4)" aria-label="Slide 4"></span>
+          <span class="dot" onclick="currentSlide(5)" aria-label="Slide 5"></span>
+        </div>
+      </section>
+
+      <!-- Welcome Section -->
+      <section class="content-section">
+        <h2>Welcome to Mayfair Bites</h2>
+        <p>Discover our artisanal bakery creations made with love and the finest ingredients. Each pastry is crafted with traditional techniques and modern flair, bringing you the perfect balance of flavor and texture in every bite. Our bakers combine time-honored recipes with innovative touches to create unforgettable treats that will transport you to pastry paradise.</p>
+      </section>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu-section">
+      <h2 class="section-title">Our Menu</h2>
+      
+      <div class="menu-category">
+        <h3>Pastries</h3>
+        <div class="menu-item">
+          <span class="menu-item-name">Butter milk cakes</span>
+          <span class="menu-item-price">****</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Milky doughnuts</span>
+          <span class="menu-item-price">****</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Almond Cakes</span>
+          <span class="menu-item-price">****</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Orange cakes</span>
+          <span class="menu-item-price">****</span>
+        </div>
+      </div>
+      
+      <div class="menu-category">
+        <h3>Viennoiserie</h3>
+        <div class="menu-item">
+          <span class="menu-item-name">Cinnamon Roll</span>
+          <span class="menu-item-price">****</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Foil cakes</span>
+          <span class="menu-item-price">**** </span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Birthday cakes</span>
+          <span class="menu-item-price">****</span>
+        </div>
+      </div>
+      
+      <div class="menu-category">
+        <h3>Specialty Items</h3>
+        <div class="menu-item">
+          <span class="menu-item-name">Signature Mayfair Cake</span>
+          <span class="menu-item-price">****/slice</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Cake parfait</span>
+          <span class="menu-item-price">****</span>
+        </div>
+        <div class="menu-item">
+          <span class="menu-item-name">Chocolate Cakes</span>
+          <span class="menu-item-price">*****</span>
+        </div>
+      </div>
+    </section>
+
+   
+    <section id="about" class="about-section">
+      <h2 class="section-title">Our Story</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>Founded in 2015, Mayfair Bites began as a small family-owned bakery with a passion for creating exceptional pastries. What started as a humble storefront has grown into a beloved neighborhood institution, known for our commitment to quality and craftsmanship.</p>
+          <p>Our head baker, Marie Dubois, brings over 20 years of experience from Parisian bakeries, combining traditional French techniques with local flavors. We source our ingredients carefully, using organic flour, European butter, and seasonal fruits to ensure every bite is a delight.</p>
+          <p>At Mayfair Bites, we believe baking is an art form. Each morning, our team arrives before dawn to prepare fresh batches of pastries, ensuring you always get the warmest, flakiest, most delicious treats possible.</p>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1608190003443-86ab6b8275d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Baker preparing pastries" loading="lazy">
+        </div>
+      </div>
+    </section>
+
+   
+    <section id="contact" class="contact-section">
+      <h2 class="section-title">Visit Us</h2>
+      <div class="contact-info">
+        <div class="contact-card">
+          <h3><i class="fas fa-map-marker-alt contact-icon"></i>Location</h3>
+          <p>123 Pastry Lane</p>
+          <p>Mayfair District</p>
+          <p>London, W1J 8AJ</p>
+        </div>
+        
+        <div class="contact-card">
+          <h3><i class="fas fa-clock contact-icon"></i>Hours</h3>
+          <p>Monday-Friday: 7am-7pm</p>
+          <p>Saturday: 8am-6pm</p>
+          <p>Sunday: 8am-4pm</p>
+        </div>
+        
+        <div class="contact-card">
+          <h3><i class="fas fa-phone contact-icon"></i>Contact</h3>
+          <p>Phone: (020) 7123 4567</p>
+          <p>Email: hello@mayfairbites.com</p>
+          <p>Catering: events@mayfairbites.com</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>Mayfair Bites</h3>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+      <p>&copy; 2023 Mayfair Bites. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+   
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+      
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        const icon = this.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+      
+      
+      document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function() {
+          navLinks.classList.remove('active');
+          menuToggle.querySelector('i').classList.remove('fa-times');
+          menuToggle.querySelector('i').classList.add('fa-bars');
+        });
+      });
+    });
+
+    
+    let slideIndex = 1;
+    let slideInterval;
+    showSlides(slideIndex);
+
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+      resetSlideInterval();
+    }
+
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+      resetSlideInterval();
+    }
+
+    function showSlides(n) {
+      let i;
+      let slides = document.getElementsByClassName("slide");
+      let dots = document.getElementsByClassName("dot");
+      
+      if (n > slides.length) {slideIndex = 1}    
+      if (n < 1) {slideIndex = slides.length}
+      
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+      }
+      
+      for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+      }
+      
+      slides[slideIndex-1].style.display = "block";  
+      dots[slideIndex-1].className += " active";
+      
+      
+      let videos = document.getElementsByTagName('video');
+      for (i = 0; i < videos.length; i++) {
+        videos[i].pause();
+      }
+      
+      
+      let currentVideo = slides[slideIndex-1].getElementsByTagName('video')[0];
+      if (currentVideo) {
+        currentVideo.play().catch(e => console.log('Autoplay prevented:', e));
+      }
+    }
+
+    function resetSlideInterval() {
+      clearInterval(slideInterval);
+      slideInterval = setInterval(function() {
+        plusSlides(1);
+      }, 5000);
+    }
+
+   
+    resetSlideInterval();
+    
+   
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
+    slideshowContainer.addEventListener('mouseleave', resetSlideInterval);
+    slideshowContainer.addEventListener('touchstart', () => clearInterval(slideInterval));
+    slideshowContainer.addEventListener('touchend', resetSlideInterval);
+    
+    
+    document.querySelectorAll('video').forEach(video => {
+      video.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
+    });
+  </script>
+</body>
+</html>
